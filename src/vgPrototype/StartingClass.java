@@ -31,6 +31,7 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
     private Font font = new Font(null, Font.BOLD, 30);
 	private Image image, currentSprite, revcurrentSprite, character, character_reversed, character2,  character2_reversed, character3, character3_reversed, characterDown,
 	characterJumped, background, heliboy, heliboy_reversed, heliboy2, heliboy2_reversed, heliboy3, heliboy3_reversed, heliboy4, heliboy4_reversed, heliboy5, heliboy5_reversed;
+	private static Boolean reversed = false;
 	
     public static Image tilegrassTop, tilegrassBot, tilegrassLeft, tilegrassRight, tiledirt;
 	
@@ -272,26 +273,44 @@ public class StartingClass extends Applet implements Runnable, KeyListener {
 			g.drawImage(background, bg1.getBgX(), bg1.getBgY(), this);
 			g.drawImage(background, bg2.getBgX(), bg2.getBgY(), this);
 			paintTiles(g);
-
+			
 			ArrayList projectiles = robot.getProjectiles();
 			for (int i = 0; i < projectiles.size(); i++) {
 				Projectile p = (Projectile) projectiles.get(i);
-				g.setColor(Color.YELLOW);
-				g.fillRect(p.getX(), p.getY(), 10, 5);
-			}		
+
+
+				if (reversed == true){
+					p.setSpeedX(-7);
+					g.setColor(Color.YELLOW);
+					g.fillRect(p.getX() - 60, p.getY(), 10, 5);					
+					
+				} else {
+					
+					p.setSpeedX(7);
+					g.setColor(Color.YELLOW);
+					g.fillRect(p.getX(), p.getY(), 10, 5);						
+					
+				}
+
+			}			
+			
 			//g.drawRect((int)robot.rect.getX(), (int)robot.rect.getY(), (int)robot.rect.getWidth(), (int)robot.rect.getHeight());
 			//g.drawRect((int)robot.rect2.getX(), (int)robot.rect2.getY(), (int)robot.rect2.getWidth(), (int)robot.rect2.getHeight());	
 			//g.drawRect((int)hb.r.getX(), (int)hb.r.getY(), (int)hb.r.getWidth(), (int)hb.r.getHeight());
-			if (hb.getCenterX()>robot.getCenterX()){
+			if (hb.getCenterX()>robot.getCenterX() || hb2.getCenterX()>robot.getCenterX() || (hb.health==0 && hb2.health==0 )){
+				
 			  g.drawImage(currentSprite, robot.getCenterX() + 10, robot.getCenterY() + 28, this);
 			  g.drawImage(hanim.getImage(), hb.getCenterX() + 10, hb.getCenterY() + 45, this);
 			  g.drawImage(hanim.getImage(), hb2.getCenterX() + 10, hb2.getCenterY() + 45, this);	
-			} else{
+			  
+			} else if (hb.getCenterX()<robot.getCenterX() || hb2.getCenterX()<robot.getCenterX()){
+			  reversed = true;	
 		      g.drawImage(revcurrentSprite, robot.getCenterX() + 10, robot.getCenterY() + 28, this);	
 			  g.drawImage(hanim2.getImage(), hb.getCenterX() + 10, hb.getCenterY() + 45, this);
 			  g.drawImage(hanim2.getImage(), hb2.getCenterX() + 10, hb2.getCenterY() + 45, this);		      
 			}
-
+			
+	
 			g.setFont(font);
 			g.setColor(Color.WHITE);
 			g.drawString(Integer.toString(score), 740, 30);
